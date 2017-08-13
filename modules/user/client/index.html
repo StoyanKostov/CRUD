@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>Title goes here</title>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+	 crossorigin="anonymous"></script>
+	<!--[if lt IE 9]>
+		<script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+		<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<noscript>
+			 <strong>Warning !</strong>
+			 Because your browser does not support HTML5, some elements are simulated using JScript.
+			 Unfortunately your browser has disabled scripting. Please enable it in order to display this page.
+		</noscript>
+	<![endif]-->
+</head>
+
+<body>
+	<header id="main">
+		<div id="header-content-wrapper" class="wrapper float-clear">
+			<div id="logo">
+				<a href="#">
+					<strong>MSO</strong>
+				</a>
+			</div>
+		</div>
+	</header>
+	<main id="content-wrapper">
+		<section>
+			<h3>Create user</h3>
+			<form id='createUser'>
+				<label for="name">
+					Forename: <input type="text" id="forename" name="forename" required>
+				</label>
+				<label for="surname">
+					Surname: <input type="text" id="surname" name="surname" required>
+				</label>
+				<label for="email">
+					Email: <input type="text" id="email" name="email" required>
+				</label>
+				<button>create</button>
+			</form>
+		</section>
+		<section>
+			<h3>Get user</h3>
+			<form id='getUser'>
+				<label for="id">
+					Id: <input type="text" id="id" name="id">
+				</label>
+				<button>Get</button>
+			</form>
+		</section>
+		<section>
+			<h3>Update user</h3>
+			<form id='updateUser'>
+				<label for="id">
+					Id: <input type="text" id="id" name="id" required>
+				</label>
+				<label for="name">
+						Forename: <input type="text" id="forename" name="forename" required>
+				</label>
+				<label for="surname">
+						Surname: <input type="text" id="surname" name="surname" required>
+					</label>
+				<label for="email">
+						Email: <input type="text" id="email" name="email" required>
+					</label>
+				<button>Update</button>
+			</form>
+		</section>
+		<section>
+			<h3>Delete user</h3>
+			<form id='deleteUser'>
+				<label for="id">
+					Id: <input type="text" id="id" name="id" required>
+				</label>
+				<button>Delete</button>
+			</form>
+		</section>
+	</main>
+	<script type="text/javascript">
+		$('#createUser').on('submit', function (e) {
+			e.preventDefault();
+			$.ajax({
+				method: "POST",
+				url: "create",
+				contentType: "application/json; charset=UTF-8",
+				dataType: "json",
+				data: JSON.stringify(parseToJSON( this )) 
+			})
+			.done(function( msg ) {
+				alert(JSON.stringify(msg.payload));	
+			}).fail(function(err) {
+				alert(err.responseText);	
+			});
+		});
+
+		$('#getUser').on('submit', function (e) {
+			e.preventDefault();
+			$.ajax({
+				method: "GET",
+				url: "read",
+				data: parseToJSON( this )
+			})
+			.done(function( msg ) {
+				alert(JSON.stringify(msg.payload));	
+			}).fail(function(err) {
+				alert(err.responseText);	
+			});
+		});
+
+		$('#updateUser').on('submit', function (e) {
+			e.preventDefault();
+			var data = parseToJSON( this );
+			var user = {};
+			if(data.forename !== ''){
+				user.forename = data.forename;
+			}
+			if(data.surname !== ''){
+				user.surname = data.surname;
+			}
+			if(data.email !== ''){
+				user.email = data.email;
+			}
+
+			$.ajax({
+				method: "PUT",
+				url: "update",
+				contentType: "application/json; charset=UTF-8",
+				dataType: "json",
+				data: JSON.stringify({
+					id: data.id,
+					user: user
+				})
+			})
+			.done(function( msg ) {
+				alert(JSON.stringify(msg.payload));	
+			}).fail(function(err) {
+				alert(err.responseText);	
+			});
+		});
+
+		$('#deleteUser').on('submit', function (e) {
+			e.preventDefault();
+			$.ajax({
+				method: "DELETE",
+				url: "delete",
+				data: JSON.stringify(parseToJSON( this ))
+			})
+			.done(function( msg ) {
+				alert(JSON.stringify(msg.payload));	
+			}).fail(function(err) {
+				alert(err.responseText);	
+			});
+		});
+
+		function parseToJSON( form ){
+			return $(form)
+					.serializeArray()
+					.reduce(function (obj, input) {
+						obj[input.name] = input.value;
+						return obj;
+					}, {});
+		}
+	</script>
+</body>
+
+</html>

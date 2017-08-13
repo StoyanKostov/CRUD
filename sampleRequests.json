@@ -1,0 +1,32 @@
+{   
+    "create": {
+        "url": "/user/create",
+        "method": "POST",
+        "params": {
+            "email": "stoya@gmail.com",
+            "forename": "stoyan",
+            "surname": "kostov"
+        }
+    },
+    "read": {
+        "url": "/user/read?id=3",
+        "method": "GET"
+    },
+    "update": {
+        "url": "/user/update",
+        "method": "PUT",
+        "params": {
+            "id": 3,
+            "user": {
+                "email": "stoya@gmail.com",
+                "forename": "stoyan",
+                "surname": "kostov"
+            }
+        }
+    },
+    "delete": {
+        "url": "/user/read?id=3",
+        "method": "DELETE"
+    }
+
+}
